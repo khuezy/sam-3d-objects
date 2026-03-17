@@ -609,6 +609,7 @@ def to_glb(
         debug (bool): Whether to print debug information.
         verbose (bool): Whether to print progress.
     """
+    rendering_engine = "nvdiffrast" # Override
     vertices = mesh.vertices.float().cpu().numpy()
     faces = mesh.faces.cpu().numpy()
     vert_colors = mesh.vertex_attrs[:, :3].cpu().numpy()

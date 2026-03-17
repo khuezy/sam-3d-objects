@@ -138,8 +138,8 @@ def render(
             image_width=int(viewpoint_camera.image_width),
             tanfovx=tanfovx,
             tanfovy=tanfovy,
-            kernel_size=kernel_size,
-            subpixel_offset=subpixel_offset,
+            # kernel_size=kernel_size, # These two no longer exists
+            # subpixel_offset=subpixel_offset,
             bg=bg_color,
             scale_modifier=scaling_modifier,
             viewmatrix=viewpoint_camera.world_view_transform,
@@ -148,11 +148,12 @@ def render(
             campos=viewpoint_camera.camera_center,
             prefiltered=False,
             debug=pipe.debug,
+            antialiasing=False, # Need in newer lib
         )
         rasterizer = GaussianRasterizer(raster_settings=raster_settings)
 
         # Rasterize visible Gaussians to image, obtain their radii (on screen).
-        rendered_image, radii = rasterizer(
+        rendered_image = rasterizer(
             means3D=means3D,
             means2D=means2D,
             shs=shs,
@@ -161,7 +162,7 @@ def render(
             scales=scales,
             rotations=rotations,
             cov3D_precomp=cov3D_precomp,
-        )
+        )[0]
     elif backend == "gsplat":
         """
         See reference code to convert from gsplat to inria:
