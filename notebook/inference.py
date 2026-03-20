@@ -112,7 +112,7 @@ class Inference:
             with_mesh_postprocess=True, # Hardcode these 3
             with_texture_baking=True,
             with_layout_postprocess=False,
-            use_vertex_color=True,
+            use_vertex_color=False,
             stage1_inference_steps=None,
             pointmap=pointmap,
         )
