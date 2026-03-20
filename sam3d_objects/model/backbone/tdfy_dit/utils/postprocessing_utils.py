@@ -369,7 +369,7 @@ def bake_texture(
     masks: List[np.array],
     extrinsics: List[np.array],
     intrinsics: List[np.array],
-    texture_size: int = 256,
+    texture_size: int = 64,
     near: float = 0.1,
     far: float = 10.0,
     mode: Literal["fast", "opt"] = "fast",
@@ -413,6 +413,7 @@ def bake_texture(
         for intr in intrinsics
     ]
 
+    print('~~mode: ',   mode)
     if mode == "fast":
         texture = torch.zeros(
             (texture_size * texture_size, 3), dtype=torch.float32
@@ -588,7 +589,7 @@ def to_glb(
     simplify: float = 0.95,
     fill_holes: bool = True,
     fill_holes_max_size: float = 0.04,
-    texture_size: int = 256,
+    texture_size: int = 64,
     debug: bool = False,
     verbose: bool = True,
     with_mesh_postprocess=True,
