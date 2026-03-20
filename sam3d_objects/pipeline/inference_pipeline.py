@@ -78,7 +78,7 @@ class InferencePipeline:
         slat_condition_input_mapping=["image"],
         pose_decoder_name="default",
         workspace_dir="",
-        downsample_ss_dist=2,  # the distance we use to downsample
+        downsample_ss_dist=4,  # the distance we use to downsample
         ss_inference_steps=25,
         ss_rescale_t=3,
         ss_cfg_strength=7,
