@@ -113,7 +113,7 @@ class Inference:
             with_texture_baking=True,
             with_layout_postprocess=False,
             use_vertex_color=False,
-            stage1_inference_steps=None,
+            stage1_inference_steps=50,
             pointmap=pointmap,
         )
 
