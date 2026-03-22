@@ -67,7 +67,7 @@ class InferencePipeline:
         slat_decoder_gs_4_ckpt_path=None,
         ss_encoder_config_path=None,
         ss_encoder_ckpt_path=None,
-        decode_formats=["mesh"],
+        decode_formats=["gaussian", "mesh"],
         dtype="float16",
         pad_size=1.0,
         version="v0",
@@ -81,12 +81,12 @@ class InferencePipeline:
         downsample_ss_dist=8,  # the distance we use to downsample
         ss_inference_steps=10,
         ss_rescale_t=3,
-        ss_cfg_strength=7,
+        ss_cfg_strength=3,
         ss_cfg_interval=[0, 500],
         ss_cfg_strength_pm=0.0,
         slat_inference_steps=10,
         slat_rescale_t=3,
-        slat_cfg_strength=5,
+        slat_cfg_strength=3,
         slat_cfg_interval=[0, 500],
         rendering_engine: str = "nvdiffrast",  # nvdiffrast OR pytorch3d,
         shape_model_dtype=None,
@@ -546,7 +546,7 @@ class InferencePipeline:
                 outputs["mesh"][0],
                 # Optional parameters
                 simplify=0.95,  # Ratio of triangles to remove in the simplification process
-                texture_size=512,  # Size of the texture used for the GLB
+                texture_size=256,  # Size of the texture used for the GLB
                 verbose=False,
                 with_mesh_postprocess=True, # Hard code to simplify mesh from 20MB to 1MB
                 with_texture_baking=True, # Hard code to force texture baking
