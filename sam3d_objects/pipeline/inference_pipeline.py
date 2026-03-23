@@ -68,7 +68,7 @@ class InferencePipeline:
         ss_encoder_config_path=None,
         ss_encoder_ckpt_path=None,
         decode_formats=["gaussian", "mesh"],
-        dtype="float16",
+        dtype="bfloat16",
         pad_size=1.0,
         version="v0",
         device="cuda",
@@ -78,23 +78,23 @@ class InferencePipeline:
         slat_condition_input_mapping=["image"],
         pose_decoder_name="default",
         workspace_dir="",
-        downsample_ss_dist=16,  # the distance we use to downsample
-        ss_inference_steps=3,
+        downsample_ss_dist=0,  # the distance we use to downsample
+        ss_inference_steps=25,
         ss_rescale_t=3,
-        ss_cfg_strength=3,
-        ss_cfg_interval=[0, 200],
+        ss_cfg_strength=7,
+        ss_cfg_interval=[0, 500],
         ss_cfg_strength_pm=0.0,
-        slat_inference_steps=3,
+        slat_inference_steps=25,
         slat_rescale_t=3,
-        slat_cfg_strength=3,
-        slat_cfg_interval=[0, 200],
+        slat_cfg_strength=5,
+        slat_cfg_interval=[0, 500],
         rendering_engine: str = "nvdiffrast",  # nvdiffrast OR pytorch3d,
         shape_model_dtype=None,
         compile_model=False,
         slat_mean=SLAT_MEAN,
         slat_std=SLAT_STD,
     ):
-        self.rendering_engine = "nvdiffrast" # Hardcode
+        self.rendering_engine = "nvdiffrast"
         self.device = torch.device(device)
         self.compile_model = compile_model
         logger.info(f"self.device: {self.device}")
@@ -548,8 +548,8 @@ class InferencePipeline:
                 simplify=0.95,  # Ratio of triangles to remove in the simplification process
                 texture_size=256,  # Size of the texture used for the GLB
                 verbose=False,
-                with_mesh_postprocess=True, # Hard code to simplify mesh from 20MB to 1MB
-                with_texture_baking=True, # Hard code to force texture baking
+                with_mesh_postprocess=True,
+                with_texture_baking=True,
                 use_vertex_color=False,
                 rendering_engine=self.rendering_engine,
             )
