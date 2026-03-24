@@ -548,8 +548,8 @@ class InferencePipeline:
                 simplify=0.95,  # Ratio of triangles to remove in the simplification process
                 texture_size=256,  # Size of the texture used for the GLB
                 verbose=False,
-                with_mesh_postprocess=True,
-                with_texture_baking=True,
+                with_mesh_postprocess=with_mesh_postprocess,
+                with_texture_baking=with_texture_baking,
                 use_vertex_color=False,
                 rendering_engine=self.rendering_engine,
             )

@@ -652,7 +652,7 @@ def prune_sparse_structure(
 
 def downsample_sparse_structure(
     coord_batch,
-    max_coords=42000,
+    max_coords=10000, # 42k threshold created too many coords 
     downsample_factor=2,
 ):
     """
@@ -708,15 +708,45 @@ def downsample_sparse_structure(
     combined = torch.cat([batch_indices, coords_rescaled], dim=1)
     unique_combined = torch.unique(combined, dim=0)
 
-    # If still too many after deduplication, randomly subsample
+    # If still too many after deduplication, subsample
     if unique_combined.shape[0] > max_coords:
-        indices = torch.randperm(unique_combined.shape[0], device=coord_batch.device)[
-            :max_coords
-        ]
-        unique_combined = unique_combined[indices]
+        unique_combined = voxel_downsample(unique_combined)
+
+        # optional: if still too big, apply light stride
+        if unique_combined.shape[0] > max_coords:
+            stride = unique_combined.shape[0] // max_coords
+            unique_combined = unique_combined[::stride]
 
     return unique_combined.int(), downsample_factor
 
+def voxel_downsample(coords, voxel_size=2):
+    """
+    coords: (N, 4) tensor [batch, x, y, z]
+    voxel_size: int (2–4 typical)
+
+    Returns: downsampled coords
+    """
+    # Split batch + xyz
+    batch = coords[:, 0:1]
+    xyz = coords[:, 1:]
+
+    # Quantize into voxel grid
+    voxel_xyz = xyz // voxel_size
+
+    # Combine batch + voxel coords
+    voxel_coords = torch.cat([batch, voxel_xyz], dim=1)
+
+    # Get unique voxels
+    unique_voxels, inverse = torch.unique(
+        voxel_coords, dim=0, return_inverse=True
+    )
+
+    # For each voxel, pick ONE representative point
+    # (first occurrence = fast and stable)
+    idx = torch.zeros(len(unique_voxels), dtype=torch.long, device=coords.device)
+    idx[inverse] = torch.arange(coords.shape[0], device=coords.device)
+
+    return coords[idx]
 
 def normalize_mesh_verts(verts):
     vmin = verts.min(axis=0)

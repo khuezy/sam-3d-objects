@@ -101,6 +101,8 @@ class Inference:
         image: Union[Image.Image, np.ndarray],
         mask: Optional[Union[None, Image.Image, np.ndarray]],
         seed: Optional[int] = None,
+        postprocess: Optional[bool] = False,
+        bake: Optional[bool] = False,
         pointmap=None,
     ) -> dict:
         image = self.merge_mask_to_rgba(image, mask)
@@ -109,11 +111,12 @@ class Inference:
             None,
             seed,
             stage1_only=False,
-            with_mesh_postprocess=True, # Hardcode these 3
-            with_texture_baking=True,
+            with_mesh_postprocess=postprocess, # Hardcode these 3
+            with_texture_baking=bake,
             with_layout_postprocess=False,
             use_vertex_color=False,
-            stage1_inference_steps=50,
+            stage1_inference_steps=20,
+            stage2_inference_steps=20,
             pointmap=pointmap,
         )
 
